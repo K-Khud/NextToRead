@@ -16,7 +16,7 @@
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <color key="backgroundColor" systemColor="systemBackgroundColor"/>
                         <prototypes>
-                            <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="default" indentationWidth="10" id="OfF-tk-Pvu">
+                            <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="default" indentationWidth="10" reuseIdentifier="categoryCell" id="OfF-tk-Pvu">
                                 <rect key="frame" x="0.0" y="28" width="414" height="43.5"/>
                                 <autoresizingMask key="autoresizingMask"/>
                                 <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" preservesSuperviewLayoutMargins="YES" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="OfF-tk-Pvu" id="Mbq-kr-gns">
@@ -31,7 +31,11 @@
                         </connections>
                     </tableView>
                     <navigationItem key="navigationItem" title="Categories" id="wco-Ze-J7d">
-                        <barButtonItem key="rightBarButtonItem" systemItem="add" id="FyM-TC-ma8"/>
+                        <barButtonItem key="rightBarButtonItem" systemItem="add" id="FyM-TC-ma8">
+                            <connections>
+                                <action selector="addButtonPressed:" destination="Q6t-v3-IeQ" id="GHq-pw-tEs"/>
+                            </connections>
+                        </barButtonItem>
                     </navigationItem>
                     <connections>
                         <segue destination="RZN-rN-pb2" kind="show" id="KlG-NV-x2F"/>
