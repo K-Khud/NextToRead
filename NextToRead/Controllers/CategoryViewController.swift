@@ -36,12 +36,14 @@ class CategoryViewController: UITableViewController {
 
 		let action = UIAlertAction(title: "Add", style: .default) { [self] (action) in
 			let newCategory = Category(context: self.context)
-			if let message = nameField.text {
+			guard let message = nameField.text else {return}
+			if message.count > 0 {
 				newCategory.name = message
 				self.categories.append(newCategory)
-
+				
 				saveCategories()
 			}
+
 		}
 		alert.addTextField { (textField) in
 			textField.placeholder = "Create New Category"
