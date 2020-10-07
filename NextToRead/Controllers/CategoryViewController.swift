@@ -8,11 +8,6 @@
 import UIKit
 import CoreData
 
-enum Constants: String {
-	case categoryCell
-	case goToBooks
-}
-
 class CategoryViewController: UITableViewController {
 	var categories = [Category]()
 
