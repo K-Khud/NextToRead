@@ -45,8 +45,6 @@ class ItemsViewController: UITableViewController {
         return cell
     }
 
-	//MARK: - Data manipulating methods
-
 	@IBAction func addButtonPressed(_ sender: UIBarButtonItem) {
 		let alert = UIAlertController(title: "Add New Book", message: "", preferredStyle: .alert)
 		var titleField = UITextField()
@@ -76,6 +74,8 @@ class ItemsViewController: UITableViewController {
 		alert.addAction(action)
 		present(alert, animated: true, completion: nil)
 	}
+
+	//MARK: - Data manipulating methods
 
 	func saveBooks() {
 		do {
