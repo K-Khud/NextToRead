@@ -13,9 +13,16 @@ class CategoryViewController: UITableViewController {
 
 	let context = (UIApplication.shared.delegate as! AppDelegate).persistentContainer.viewContext
 
+	let searchController = UISearchController(searchResultsController: nil)
+
     override func viewDidLoad() {
         super.viewDidLoad()
-
+//		searchController.searchResultsUpdater = self
+		searchController.searchBar.delegate = self
+		navigationItem.searchController = searchController
+		searchController.obscuresBackgroundDuringPresentation = false
+		searchController.searchBar.placeholder = "Search Book"
+		searchController.definesPresentationContext = true
 		loadCategories()
 
         // Uncomment the following line to display an Edit button in the navigation bar for this view controller.
@@ -46,8 +53,11 @@ class CategoryViewController: UITableViewController {
 		present(alert, animated: true, completion: nil)
 	}
 
-	func loadCategories() {
+	func loadCategories(with predicate: NSPredicate?) {
 		let request: NSFetchRequest<Category> = Category.fetchRequest()
+		if let predicate = predicate {
+			request.predicate = predicate
+		}
 		do {
 			categories = try context.fetch(request)
 		} catch {
@@ -94,4 +104,14 @@ class CategoryViewController: UITableViewController {
 		destination.selectedCategory = categories[indexSelected]
     }
 
+}
+
+extension CategoryViewController: UISearchBarDelegate {
+	public func searchBarSearchButtonClicked(_ searchBar: UISearchBar) {
+
+	}
+
+	public func searchBar(_ searchBar: UISearchBar, textDidChange searchText: String) {
+		
+	}
 }
