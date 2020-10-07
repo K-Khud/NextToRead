@@ -10,10 +10,10 @@ import CoreData
 
 enum Constants: String {
 	case categoryCell
+	case goToBooks
 }
 
 class CategoryViewController: UITableViewController {
-	let categoriesExmp = ["One", "Two", "Three"]
 	var categories = [Category]()
 
 	let context = (UIApplication.shared.delegate as! AppDelegate).persistentContainer.viewContext
@@ -22,9 +22,6 @@ class CategoryViewController: UITableViewController {
         super.viewDidLoad()
 
 		loadCategories()
-
-        // Uncomment the following line to preserve selection between presentations
-        // self.clearsSelectionOnViewWillAppear = false
 
         // Uncomment the following line to display an Edit button in the navigation bar for this view controller.
         // self.navigationItem.rightBarButtonItem = self.editButtonItem
@@ -40,7 +37,7 @@ class CategoryViewController: UITableViewController {
 			if message.count > 0 {
 				newCategory.name = message
 				self.categories.append(newCategory)
-				
+
 				saveCategories()
 			}
 
@@ -87,15 +84,19 @@ class CategoryViewController: UITableViewController {
         return cell
     }
 
+	// MARK: - Table view delegate methods
 
-    /*
-    // MARK: - Navigation
+	override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+		performSegue(withIdentifier: Constants.goToBooks.rawValue, sender: self)
+	}
 
-    // In a storyboard-based application, you will often want to do a little preparation before navigation
+
+	// MARK: - Navigation
+
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-        // Get the new view controller using segue.destination.
-        // Pass the selected object to the new view controller.
+		guard let destination = segue.destination as? ItemsViewController else {return}
+		guard let indexSelected = tableView.indexPathForSelectedRow?.row else {return}
+		destination.selectedCategory = categories[indexSelected]
     }
-    */
 
 }
