@@ -15,7 +15,6 @@ class ItemsViewController: UITableViewController {
 		}
 	}
 	var books = [Book]()
-	let booksExmp = ["One", "Two", "Three"]
 	let context = (UIApplication.shared.delegate as! AppDelegate).persistentContainer.viewContext
 
     override func viewDidLoad() {
@@ -28,36 +27,52 @@ class ItemsViewController: UITableViewController {
     // MARK: - Table view data source
 
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        // #warning Incomplete implementation, return the number of rows
 		return books.count
     }
 
 
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-		let cell = tableView.dequeueReusableCell(withIdentifier: Constants.bookCell.rawValue, for: indexPath)
-		cell.textLabel?.text = books[indexPath.row].title
+		var cell = tableView.dequeueReusableCell(withIdentifier: Constants.bookCell.rawValue, for: indexPath)
+		let cellWithStyle = UITableViewCell(style: .subtitle, reuseIdentifier: Constants.bookCell.rawValue)
+		cell = cellWithStyle
+		cell.accessoryType = .checkmark
+		let book = books[indexPath.row]
+		cell.accessoryType = book.finished ? .checkmark : .none
+		cell.textLabel?.text = book.title
+		cell.detailTextLabel?.text = book.author
+
 
         return cell
     }
 
+	//MARK: - Data manipulating methods
+
 	@IBAction func addButtonPressed(_ sender: UIBarButtonItem) {
 		let alert = UIAlertController(title: "Add New Book", message: "", preferredStyle: .alert)
 		var titleField = UITextField()
+		var authorField = UITextField()
 		let action = UIAlertAction(title: "Add", style: .default) { [self] (action) in
 			guard let title = titleField.text else {return}
 			if title.count > 0 {
 				let newBook = Book(context: self.context)
 				newBook.title = title
+				newBook.author = authorField.text
 				newBook.parentCategory = selectedCategory
+
 
 				books.append(newBook)
 				saveBooks()
 			}
 		}
 		alert.addTextField { (titleText) in
-			titleText.placeholder = "Create a book name"
+			titleText.placeholder = "Save a book name"
 			titleField = titleText
 		}
+		alert.addTextField { (authorText) in
+			authorText.placeholder = "Save a book author"
+			authorField = authorText
+		}
+
 		alert.addAction(action)
 		present(alert, animated: true, completion: nil)
 	}
@@ -83,6 +98,13 @@ class ItemsViewController: UITableViewController {
 			print("Error fetching books, \(error)")
 		}
 		tableView.reloadData()
+	}
+
+	//MARK: - Table view delegate methods
+
+	override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+		books[indexPath.row].finished = books[indexPath.row].finished ? false : true
+		saveBooks()
 	}
     /*
     // MARK: - Navigation
