@@ -69,7 +69,11 @@
                         </connections>
                     </tableView>
                     <navigationItem key="navigationItem" title="Books" id="XvM-zS-i9p">
-                        <barButtonItem key="rightBarButtonItem" systemItem="add" id="Ovi-pX-TpW"/>
+                        <barButtonItem key="rightBarButtonItem" systemItem="add" id="Ovi-pX-TpW">
+                            <connections>
+                                <action selector="addButtonPressed:" destination="RZN-rN-pb2" id="HcD-hX-t56"/>
+                            </connections>
+                        </barButtonItem>
                     </navigationItem>
                 </tableViewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="wr0-h7-Bek" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>

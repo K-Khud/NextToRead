@@ -40,9 +40,41 @@ class ItemsViewController: UITableViewController {
         return cell
     }
 
+	@IBAction func addButtonPressed(_ sender: UIBarButtonItem) {
+		let alert = UIAlertController(title: "Add New Book", message: "", preferredStyle: .alert)
+		var titleField = UITextField()
+		let action = UIAlertAction(title: "Add", style: .default) { [self] (action) in
+			guard let title = titleField.text else {return}
+			if title.count > 0 {
+				let newBook = Book(context: self.context)
+				newBook.title = title
+				newBook.parentCategory = selectedCategory
+
+				books.append(newBook)
+				saveBooks()
+			}
+		}
+		alert.addTextField { (titleText) in
+			titleText.placeholder = "Create a book name"
+			titleField = titleText
+		}
+		alert.addAction(action)
+		present(alert, animated: true, completion: nil)
+	}
+
+	func saveBooks() {
+		do {
+			try context.save()
+		} catch {
+			print("Error saving books, \(error)")
+		}
+		tableView.reloadData()
+	}
+
 	func loadBooks() {
 		let request: NSFetchRequest<Book> = Book.fetchRequest()
 		guard let categoryArgument = selectedCategory?.name else {return}
+
 		let predicate = NSPredicate(format: "parentCategory.name MATCHES %@", categoryArgument)
 		request.predicate = predicate
 		do {
