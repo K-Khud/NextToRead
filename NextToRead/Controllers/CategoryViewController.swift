@@ -10,6 +10,8 @@ import CoreData
 
 class CategoryViewController: UITableViewController {
 	var categories = [Category]()
+	var books = [Book]()
+	var searchText: String?
 
 	let context = (UIApplication.shared.delegate as! AppDelegate).persistentContainer.viewContext
 
@@ -53,8 +55,7 @@ class CategoryViewController: UITableViewController {
 		present(alert, animated: true, completion: nil)
 	}
 
-	func loadCategories(with predicate: NSPredicate?) {
-		let request: NSFetchRequest<Category> = Category.fetchRequest()
+	func loadCategories(with request: NSFetchRequest<Category> = Category.fetchRequest(), predicate: NSPredicate? = nil) {
 		if let predicate = predicate {
 			request.predicate = predicate
 		}
@@ -100,18 +101,31 @@ class CategoryViewController: UITableViewController {
 
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
 		guard let destination = segue.destination as? ItemsViewController else {return}
-		guard let indexSelected = tableView.indexPathForSelectedRow?.row else {return}
-		destination.selectedCategory = categories[indexSelected]
+		if let indexSelected = tableView.indexPathForSelectedRow?.row {
+			destination.selectedCategory = categories[indexSelected]
+		} else if let searchArgument = searchText {
+			destination.searchArgument = searchArgument
+			destination.selectedCategory = nil
+		}
     }
 
 }
 
 extension CategoryViewController: UISearchBarDelegate {
 	public func searchBarSearchButtonClicked(_ searchBar: UISearchBar) {
-
+		if let text = searchBar.text {
+			searchText = text
+			performSegue(withIdentifier: Constants.goToBooks.rawValue, sender: self)
+		}
 	}
 
 	public func searchBar(_ searchBar: UISearchBar, textDidChange searchText: String) {
+		if searchBar.text?.count == 0 {
+			loadCategories()
+			DispatchQueue.main.async {
+				searchBar.resignFirstResponder()
+			}
+		}
 		
 	}
 }

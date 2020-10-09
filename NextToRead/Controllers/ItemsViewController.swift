@@ -14,6 +14,13 @@ class ItemsViewController: UITableViewController {
 			loadBooks()
 		}
 	}
+	var searchArgument: String? {
+		didSet {
+			loadBooks()
+			navigationItem.rightBarButtonItem?.isEnabled = false
+		}
+	}
+
 	var books = [Book]()
 	let context = (UIApplication.shared.delegate as! AppDelegate).persistentContainer.viewContext
 
@@ -88,16 +95,20 @@ class ItemsViewController: UITableViewController {
 
 	func loadBooks() {
 		let request: NSFetchRequest<Book> = Book.fetchRequest()
-		guard let categoryArgument = selectedCategory?.name else {return}
+		if let categoryArgument = selectedCategory?.name {
 
-		let predicate = NSPredicate(format: "parentCategory.name MATCHES %@", categoryArgument)
-		request.predicate = predicate
-		do {
-			books = try context.fetch(request)
-		} catch {
-			print("Error fetching books, \(error)")
+			let predicate = NSPredicate(format: "parentCategory.name MATCHES %@", categoryArgument)
+			request.predicate = predicate
+		} else if let text = searchArgument {
+			let predicate = NSPredicate(format: "title CONTAINS[cd] %@", text)
+			request.predicate = predicate
 		}
-		tableView.reloadData()
+			do {
+				books = try context.fetch(request)
+			} catch {
+				print("Error fetching books, \(error)")
+			}
+			tableView.reloadData()
 	}
 
 	//MARK: - Table view delegate methods
@@ -106,14 +117,4 @@ class ItemsViewController: UITableViewController {
 		books[indexPath.row].finished = books[indexPath.row].finished ? false : true
 		saveBooks()
 	}
-    /*
-    // MARK: - Navigation
-
-    // In a storyboard-based application, you will often want to do a little preparation before navigation
-    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-        // Get the new view controller using segue.destination.
-        // Pass the selected object to the new view controller.
-    }
-    */
-
 }
